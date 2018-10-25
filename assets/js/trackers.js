@@ -77,6 +77,16 @@ const TRACKERS_BY_ROOT = {
     ''
   ],
 
+  // comScore Digital Analytix?
+  // http://www.about-digitalanalytics.com/comscore-digital-analytix-url-campaign-generator
+  'ns_': [
+    'source',
+    'mchannel',
+    'campaign',
+    'linkname',
+    'fee'
+  ],
+
   // Simple Reach
   'sr_': [
     'share'
@@ -307,6 +317,7 @@ const TRACKERS_BY_ROOT = {
   // Non-prefixy and 1-offs
   '': [
     // Facebook Click Identifier
+    // http://thisinterestsme.com/facebook-fbclid-parameter/
     'fbclid',
     // Google Click Identifier
     'gclid',
@@ -338,6 +349,8 @@ const TRACKERS_BY_ROOT = {
     'camptype',
     'scid',
     'sc_intid',
+    // Some other Google Click thing
+    'ocid',
     // Unknown
     'ncid',
     // Unknown
