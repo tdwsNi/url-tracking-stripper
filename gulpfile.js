@@ -101,10 +101,10 @@ gulp.task('manifest-uglified', function() {
 
 
 // MOVE FOR DEV
-gulp.task('move', ['images', 'lib', 'html', 'favicon', 'manifest']);
+gulp.task('move', gulp.series('images', 'lib', 'html', 'favicon', 'manifest'));
 
 // MOVE FOR UGLIFIED
-gulp.task('move-uglified', ['images-uglified', 'lib-uglified', 'html-uglified', 'favicon-uglified', 'manifest-uglified']);
+gulp.task('move-uglified', gulp.series('images-uglified', 'lib-uglified', 'html-uglified', 'favicon-uglified', 'manifest-uglified'));
 
 
 // WEBPACK
@@ -124,42 +124,6 @@ gulp.task('webpack-uglified', function() {
     .pipe(gulp.dest(`./${TARGET_UGLIFIED_DIR}/public/js`));
 });
 
-
-
-/*
-* NON-UGLIFIED BUILD PROCESS
-*
-* $ gulp dev
-*/
-// BUILD AND WATCH NON-UGLIFIED
-gulp.task('dev', function() {
-  runSequence('clean', 'move', 'webpack');
-
-  gulp.watch('./assets/**/*', ['webpack']);
-  gulp.watch('./assets/**.html', ['html']);
-  gulp.watch('./assets/manifest.json', ['manifest']);
-
-  console.log('Watching...');
-});
-
-// BUILD AND ZIP NON-UGLIFIED
-gulp.task('build', function() {
-  runSequence('clean', 'move', 'webpack', 'zip');
-});
-
-
-/*
-* UGLIFIED BUILD PROCESS
-*
-* $ gulp
-*/
-// BUILD AND ZIP UGLIFIED
-gulp.task('default', function() {
-  runSequence('clean-uglified', 'move-uglified', 'webpack-uglified', 'zip-uglified');
-});
-
-
-
 // ZIP
 gulp.task('zip', function() {
   return gulp.src(`./${TARGET_DIR}/**/*`)
@@ -173,6 +137,35 @@ gulp.task('zip-uglified', function() {
     .pipe(zip('chrome_extension-uglified.zip'))
     .pipe(gulp.dest('./'));
 });
+
+
+/*
+* NON-UGLIFIED BUILD PROCESS
+*
+* $ gulp dev
+*/
+// BUILD AND WATCH NON-UGLIFIED
+gulp.task('dev', function() {
+  gulp.series('clean', 'move', 'webpack');
+
+  gulp.watch('./assets/**/*', ['webpack']);
+  gulp.watch('./assets/**.html', ['html']);
+  gulp.watch('./assets/manifest.json', ['manifest']);
+
+  console.log('Watching...');
+});
+
+// BUILD AND ZIP NON-UGLIFIED
+gulp.task('build', gulp.series('clean', 'move', 'webpack', 'zip'));
+
+
+/*
+* UGLIFIED BUILD PROCESS
+*
+* $ gulp
+*/
+// BUILD AND ZIP UGLIFIED
+gulp.task('default', gulp.series('clean-uglified', 'move-uglified', 'webpack-uglified', 'zip-uglified'));
 
 
 /*
